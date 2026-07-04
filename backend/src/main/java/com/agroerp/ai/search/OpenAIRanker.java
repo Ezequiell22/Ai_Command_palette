@@ -24,25 +24,46 @@ public class OpenAIRanker implements IntentRanker {
         if (candidates.isEmpty()) return List.of();
 
         String candidatesJson = candidates.stream()
-                .map(item -> String.format("{\"id\": %d, \"title\": \"%s\", \"description\": \"%s\"}",
-                        item.getId(), escapeJson(item.getTitle()), escapeJson(item.getDescription())))
+                .map(item -> {
+                    try {
+                        return String.format("{\"id\": %d, \"title\": \"%s\", \"description\": \"%s\", \"module\": \"%s\", \"aliases\": %s, \"keywords\": %s}",
+                                item.getId(),
+                                escapeJson(item.getTitle()),
+                                escapeJson(item.getDescription()),
+                                escapeJson(item.getModule()),
+                                item.getAliases() != null ? objectMapper.writeValueAsString(item.getAliases()) : "[]",
+                                item.getKeywords() != null ? objectMapper.writeValueAsString(item.getKeywords()) : "[]");
+                    } catch (Exception e) {
+                        log.error("Error serializing catalog item", e);
+                        return String.format("{\"id\": %d, \"title\": \"%s\", \"description\": \"%s\"}",
+                                item.getId(),
+                                escapeJson(item.getTitle()),
+                                escapeJson(item.getDescription()));
+                    }
+                })
                 .reduce((a, b) -> a + "," + b)
                 .map(s -> "[" + s + "]")
                 .orElse("[]");
 
         String promptText = String.format("""
-            Você é um assistente que ajuda a encontrar funcionalidades em um ERP agrícola.
+            Você é um assistente especializado em encontrar funcionalidades em um ERP agrícola.
+            
             Consulta do usuário: "%s"
             
             Candidatos disponíveis: %s
             
             Instruções:
-            1. Escolha apenas os candidatos mais relevantes para a consulta.
+            1. Analise a consulta e encontre os candidatos mais relevantes (incluindo sinônimos, aliases e palavras-chave).
             2. Retorne SOMENTE um JSON com a estrutura {"results": [{"id": <number>, "confidence": <number>}]}.
-            3. Confidence deve ser entre 0 e 1, sendo 1 o mais relevante.
+            3. Confidence deve ser entre 0 e 1:
+               - 1.0 = perfeito match
+               - 0.7-0.9 = muito relevante
+               - 0.4-0.6 = parcialmente relevante
+               - < 0.4 = não inclua
             4. Não inclua explicações, markdown ou texto extra.
             5. Não invente IDs que não existem na lista de candidatos.
-            6. Se nenhum candidato for relevante, retorne {"results": []}.
+            6. Se houver candidatos relevantes, retorne-os ordenados por confidence (maior primeiro).
+            7. Se nenhum candidato for relevante, retorne {"results": []}.
             """, query, candidatesJson);
 
         try {
@@ -51,16 +72,16 @@ public class OpenAIRanker implements IntentRanker {
             RankResponse rankResponse = objectMapper.readValue(response, RankResponse.class);
             return rankResponse.results();
         } catch (Exception e) {
-            log.error("Failed to rank candidates", e);
+            log.error("Failed to rank candidates, returning all candidates with basic confidence", e);
             return candidates.stream()
-                    .limit(5)
-                    .map(item -> new RankedResult(item.getId(), 0.5))
+                    .limit(10)
+                    .map(item -> new RankedResult(item.getId(), 0.7))
                     .toList();
         }
     }
 
     private String escapeJson(String s) {
-        return s != null ? s.replace("\"", "\\\"").replace("\n", " ") : "";
+        return s != null ? s.replace("\"", "\\\"").replace("\n", " ").replace("\r", " ") : "";
     }
 
     private record RankResponse(List<RankedResult> results) {}

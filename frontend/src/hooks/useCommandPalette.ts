@@ -12,6 +12,7 @@ export const useCommandPalette = () => {
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const lastSearchedQuery = useRef<string>('');
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
@@ -20,6 +21,9 @@ export const useCommandPalette = () => {
     setResults([]);
     setSelectedIndex(-1);
     lastSearchedQuery.current = '';
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
   }, []);
 
   const searchLocal = (q: string): SearchResult[] => {
@@ -42,8 +46,8 @@ export const useCommandPalette = () => {
       }));
   };
 
-  const handleSearch = useCallback(async () => {
-    const trimmedQuery = query.trim();
+  const performSearch = useCallback(async (searchQuery: string) => {
+    const trimmedQuery = searchQuery.trim();
     if (!trimmedQuery) {
       setResults([]);
       setSelectedIndex(-1);
@@ -67,13 +71,18 @@ export const useCommandPalette = () => {
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, []);
+
+  const handleSearch = useCallback(() => {
+    performSearch(query);
+  }, [query, performSearch]);
 
   const handleSetQuery = useCallback((newQuery: string) => {
     setQuery(newQuery);
     if (!newQuery.trim()) {
       setResults([]);
       setSelectedIndex(-1);
+      lastSearchedQuery.current = '';
     }
   }, []);
 
@@ -90,6 +99,22 @@ export const useCommandPalette = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, open, close]);
+
+  useEffect(() => {
+    if (isOpen && query.trim()) {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+      debounceTimer.current = setTimeout(() => {
+        performSearch(query);
+      }, 300);
+    }
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [query, isOpen, performSearch]);
 
   const navigateDown = () => {
     if (results.length > 0) {
