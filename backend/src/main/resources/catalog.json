@@ -1,0 +1,210 @@
+[
+  {
+    "id": 1001,
+    "module": "Fiscal",
+    "category": "Nota Fiscal",
+    "title": "Emitir Nota Fiscal Eletrônica",
+    "description": "Emite NF-e para vendas de produtos agrícolas.",
+    "aliases": [
+      "emitir nota",
+      "gerar nota",
+      "faturar",
+      "nfe",
+      "emitir nf"
+    ],
+    "keywords": [
+      "xml",
+      "danfe",
+      "sefaz",
+      "cfop",
+      "icms"
+    ],
+    "route": "/fiscal/nfe/emissao",
+    "component": "IssueInvoicePage",
+    "permission": "NF_EMITIR"
+  },
+  {
+    "id": 1002,
+    "module": "Financeiro",
+    "category": "Contas a Receber",
+    "title": "Baixa de Contas a Receber",
+    "description": "Realiza a baixa financeira de títulos recebidos.",
+    "aliases": [
+      "receber pagamento",
+      "baixar título",
+      "quitar cliente"
+    ],
+    "keywords": [
+      "financeiro",
+      "recebimento",
+      "títulos",
+      "caixa"
+    ],
+    "route": "/financeiro/receber/baixa",
+    "component": "AccountsReceivableSettlementPage",
+    "permission": "FIN_RECEBER_BAIXA"
+  },
+  {
+    "id": 1003,
+    "module": "Estoque",
+    "category": "Inventário",
+    "title": "Inventário de Estoque",
+    "description": "Executa inventário físico dos produtos armazenados.",
+    "aliases": [
+      "contagem",
+      "inventário",
+      "conferir estoque"
+    ],
+    "keywords": [
+      "estoque",
+      "saldo",
+      "contagem"
+    ],
+    "route": "/estoque/inventario",
+    "component": "InventoryPage",
+    "permission": "EST_INVENTARIO"
+  },
+  {
+    "id": 1004,
+    "module": "Agricultura",
+    "category": "Plantio",
+    "title": "Planejamento de Plantio",
+    "description": "Planeja o plantio por talhão, cultura e safra.",
+    "aliases": [
+      "plantar",
+      "planejar plantio",
+      "nova safra"
+    ],
+    "keywords": [
+      "talhão",
+      "cultura",
+      "safra"
+    ],
+    "route": "/agricultura/plantio",
+    "component": "CropPlanningPage",
+    "permission": "AGR_PLANTIO"
+  },
+  {
+    "id": 1005,
+    "module": "Agricultura",
+    "category": "Receituário Agronômico",
+    "title": "Emitir Receituário Agronômico",
+    "description": "Emite receituário agronômico para aplicação de defensivos.",
+    "aliases": [
+      "receita agronômica",
+      "receituário",
+      "prescrição"
+    ],
+    "keywords": [
+      "agronomia",
+      "defensivos",
+      "engenheiro agrônomo"
+    ],
+    "route": "/agricultura/receituario",
+    "component": "AgronomicPrescriptionPage",
+    "permission": "AGR_RECEITUARIO"
+  },
+  {
+    "id": 1006,
+    "module": "Pecuária",
+    "category": "Rebanho",
+    "title": "Cadastro de Animais",
+    "description": "Permite cadastrar e manter informações do rebanho.",
+    "aliases": [
+      "gado",
+      "animal",
+      "boi",
+      "vaca",
+      "bezerro"
+    ],
+    "keywords": [
+      "pecuária",
+      "brinco",
+      "lote"
+    ],
+    "route": "/pecuaria/rebanho",
+    "component": "LivestockRegistrationPage",
+    "permission": "PEC_REBANHO"
+  },
+  {
+    "id": 1007,
+    "module": "Máquinas",
+    "category": "Manutenção",
+    "title": "Ordem de Serviço de Máquinas",
+    "description": "Controla manutenção preventiva e corretiva de máquinas agrícolas.",
+    "aliases": [
+      "manutenção trator",
+      "oficina",
+      "ordem de serviço"
+    ],
+    "keywords": [
+      "máquinas",
+      "implementos",
+      "manutenção"
+    ],
+    "route": "/maquinas/os",
+    "component": "MachineWorkOrderPage",
+    "permission": "MAQ_OS"
+  },
+  {
+    "id": 1008,
+    "module": "Compras",
+    "category": "Pedidos",
+    "title": "Pedido de Compra",
+    "description": "Cria pedidos de compra de insumos agrícolas.",
+    "aliases": [
+      "comprar",
+      "pedido fornecedor",
+      "comprar fertilizante"
+    ],
+    "keywords": [
+      "insumos",
+      "fornecedor",
+      "cotação"
+    ],
+    "route": "/compras/pedido",
+    "component": "PurchaseOrderPage",
+    "permission": "COM_PEDIDO"
+  },
+  {
+    "id": 1009,
+    "module": "Comercial",
+    "category": "Pedidos de Venda",
+    "title": "Pedido de Venda",
+    "description": "Registra pedidos de venda de produtos agrícolas.",
+    "aliases": [
+      "vender",
+      "novo pedido",
+      "pedido cliente"
+    ],
+    "keywords": [
+      "cliente",
+      "comercial",
+      "venda"
+    ],
+    "route": "/comercial/pedido",
+    "component": "SalesOrderPage",
+    "permission": "VEN_PEDIDO"
+  },
+  {
+    "id": 1010,
+    "module": "Relatórios",
+    "category": "Gerencial",
+    "title": "Relatório de Rentabilidade por Safra",
+    "description": "Apresenta indicadores financeiros e produtivos por safra.",
+    "aliases": [
+      "lucro safra",
+      "resultado safra",
+      "rentabilidade"
+    ],
+    "keywords": [
+      "indicadores",
+      "bi",
+      "dashboard",
+      "resultado"
+    ],
+    "route": "/relatorios/rentabilidade-safra",
+    "component": "CropProfitabilityReportPage",
+    "permission": "REL_RENTABILIDADE"
+  }
+]

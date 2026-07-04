@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ai-command-palette
+  ai:
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+    openai:
+      api-key: ${OPENAI_API_KEY:demo}
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-small
+  datasource:
+    url: jdbc:postgresql://postgres:5432/agroerp
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+server:
+  port: 8080
