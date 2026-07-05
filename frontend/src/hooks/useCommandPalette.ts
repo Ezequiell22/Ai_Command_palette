@@ -12,7 +12,7 @@ export const useCommandPalette = () => {
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const lastSearchedQuery = useRef<string>('');
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimer = useRef<number | null>(null); 
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
